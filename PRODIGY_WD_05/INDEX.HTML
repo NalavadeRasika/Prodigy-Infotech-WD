@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Weather App</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+}
+
+.container{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  width:320px;
+  color:#fff;
+}
+
+h1{margin-bottom:15px;}
+
+input{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin-bottom:10px;
+  outline:none;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#00c6ff;
+  color:#000;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+.result{
+  margin-top:20px;
+  font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🌦 Weather App</h1>
+
+  <input type="text" id="city" placeholder="Enter city name">
+  <button onclick="getWeather()">Search</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+async function getWeather(){
+  const city=document.getElementById("city").value;
+  const apiKey="f7e8db5f6d417aff6395eb8a3e0e462f"; // 👈 replace here
+
+  try{
+    const res=await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+    );
+
+    const data=await res.json();
+
+    if(data.cod==="404"){
+      document.getElementById("result").innerHTML="City not found ❌";
+      return;
+    }
+
+    document.getElementById("result").innerHTML=`
+      🌡 Temperature: ${data.main.temp}°C <br>
+      🌤 Weather: ${data.weather[0].main} <br>
+      💧 Humidity: ${data.main.humidity}% <br>
+      🌬 Wind: ${data.wind.speed} m/s
+    `;
+  }
+  catch(error){
+    document.getElementById("result").innerHTML="Error fetching data ⚠️";
+  }
+}
+</script>
+
+</body>
+</html>
